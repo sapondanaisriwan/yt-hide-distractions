@@ -1,0 +1,175 @@
+/* ==UserStyle==
+@name           Hide Distractions
+@author         sapondanaisriwan <sapondanaisriwan@gmail.com> (https://github.com/sapondanaisriwan)
+@description    If you want to submit a bug or request a feature please report via github issue. Since I receive so many emails, I can't reply to them all.
+@namespace      https://userstyles.world/user/sapondanaisriwan
+@homepageURL    https://github.com/sapondanaisriwan/yt-hide-distractions
+@supportURL     https://github.com/sapondanaisriwan/yt-hide-distractions/issues
+@version        1.0.0
+@license        MIT
+@preprocessor   stylus
+
+@var checkbox hideShorts      "Hide Shorts" 1     
+@var checkbox exploreTab       "Hide Explore Tab" 1
+@var checkbox premiumTab       "Hide Premium Tab" 1
+@var checkbox settingTab       "Hide Setting Tab" 1
+
+@var checkbox livechat         "Hide Live Chat" 0
+@var checkbox annotation       "Hide Annotation" 1
+@var checkbox comment          "Hide Comments" 1
+@var checkbox homepage         "Hide Homepage" 0
+@var checkbox rightSideVideos  "Hide Right Side Video" 0
+@var checkbox livechat         "Hide live chat" 1
+
+
+==/UserStyle== */
+@-moz-document domain("youtube.com") {
+  /* Variables */
+  i=!important;
+  t=transparent;
+
+  defaultMargin() {
+      margin-left: calc(var(--ytd-rich-grid-item-margin)/2);
+      margin-right: calc(var(--ytd-rich-grid-item-margin)/2);
+      margin-bottom: 40px;
+  }
+
+  fixYoutubeLayout() {
+      ytd-rich-grid-row,
+      ytd-rich-grid-row #contents {
+          display: contents;
+      }
+
+      #contents > ytd-rich-item-renderer:not([is-shorts-grid]) {
+          defaultMargin();
+      }
+  }
+
+  ytd-guide-renderer ytd-guide-section-renderer {
+      &:has(a[href^="/feed/trending"]) {
+          display: none if exploreTab;
+      }
+
+      &:has(a[href="/premium"]) {
+          display: none if premiumTab;
+      }
+
+      &:has(a[href="/account"]) {
+          display: none if settingTab;
+      }
+  }
+
+  #footer {
+      display: none i if settingTab;
+  }
+
+  /* Hide donation shelf */
+  #donation-shelf {
+      display: none;
+  }
+
+  /* Hide live chat */
+  ytd-live-chat-frame {
+      display: none if livechat;
+  }
+
+  /* Hide annotation */
+  .annotation {
+      display: none if annotation;
+  }
+
+  /* Hide right side video */
+  ytd-watch-flexy #secondary.ytd-watch-flexy {
+      display: none if rightSideVideos;
+  }
+
+
+  /* Hide comments */
+  ytd-comments {
+      display: none if comment;
+  }
+
+  if (hideShorts) {
+
+      /* These rules won't be applied in browsers that don't support :has() */
+      /* https://www.youtube.com/results?search_query=shorts */
+      ytd-video-renderer[is-search],
+      ytd-compact-video-renderer,
+      ytd-reel-item-renderer,
+      ytd-grid-video-renderer,
+      ytd-rich-item-renderer {
+          &:has(a[href^="/shorts/"]) {
+              display: none i;
+          }
+      }
+
+      /* FireFox users  */
+      #contents > ytd-rich-item-renderer:has(a[href^="/shorts/"]) {
+          display: none i;
+      }
+
+      ytd-watch-flexy #contents.ytd-item-section-renderer > ytd-reel-shelf-renderer.ytd-item-section-renderer {
+          display: none;
+      }
+
+      /* https://www.youtube.com/@MrBeast2/shorts */
+      ytd-rich-grid-renderer[is-shorts-grid] {
+          display: none;
+      }
+
+      /* https://www.youtube.com/@MrBeast2/featured */
+      #contents > ytd-item-section-renderer > #contents ytd-reel-shelf-renderer:has(yt-horizontal-list-renderer > #scroll-container > #items > ytd-reel-item-renderer #dismissible > ytd-thumbnail > a#thumbnail[href^="/shorts/"]) {
+          display: none;
+      }
+
+      ytd-rich-section-renderer:has(#content > ytd-rich-shelf-renderer[is-shorts]) {
+          display: none;
+      }
+
+      #endpoint.yt-simple-endpoint.ytd-guide-entry-renderer,
+      ytd-mini-guide-entry-renderer a.ytd-mini-guide-entry-renderer {
+          &[title="Shorts"] {
+              display: none;
+          }
+      }
+
+      /* https://www.youtube.com/hashtag/shorts */
+      [page-subtype="hashtag-landing-page"] {
+          ytd-rich-item-renderer:has(#content > ytd-rich-grid-media > #dismissible > ytd-thumbnail > a#thumbnail[href^="/shorts/"]) {
+              display: none;
+          }
+
+          ytd-rich-grid-renderer {
+              /* Set to be treated as if they were the children of their parent element */
+              #contents {
+                  fixYoutubeLayout();
+              }
+          }
+      }
+
+      ytd-shorts {
+          display: none;
+      }
+
+      ytd-rich-shelf-renderer[is-shorts] {
+          display: none;
+      }
+
+      /* https://www.youtube.com/feed/subscriptions?flow=2 */
+      ytd-two-column-browse-results-renderer[page-subtype="subscriptions"] > #primary.ytd-two-column-browse-results-renderer > ytd-section-list-renderer[page-subtype="subscriptions"] > #contents.ytd-section-list-renderer > ytd-item-section-renderer.ytd-section-list-renderer:has(#contents.ytd-item-section-renderer > ytd-shelf-renderer.ytd-item-section-renderer > #dismissible.ytd-shelf-renderer > #contents.ytd-shelf-renderer > ytd-expanded-shelf-contents-renderer.ytd-shelf-renderer > #grid-container.ytd-expanded-shelf-contents-renderer > ytd-video-renderer > #dismissible > ytd-thumbnail > a#thumbnail[href^="/shorts/"]) {
+          display: none;
+      }
+
+      /* Trending */
+      [page-subtype="trending"] ytd-video-renderer:has(#dismissible.ytd-video-renderer > ytd-thumbnail a#thumbnail[href^="/shorts/"]) {
+          display: none i;
+      }
+  }
+
+  ytd-browse {
+      /* Hide homepage */
+      &[page-subtype="home"] {
+          display: none if homepage;
+      }
+  }
+}
