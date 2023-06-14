@@ -9,18 +9,18 @@
 @license        MIT
 @preprocessor   stylus
 
-@var checkbox hideShorts      "Hide Shorts" 1     
+@var checkbox hideShorts       "Hide Shorts" 1
+@var checkbox homepage         "Hide Homepage" 0
+
 @var checkbox exploreTab       "Hide Explore Tab" 1
 @var checkbox premiumTab       "Hide Premium Tab" 1
 @var checkbox settingTab       "Hide Setting Tab" 1
 
 @var checkbox livechat         "Hide Live Chat" 0
 @var checkbox annotation       "Hide Annotation" 1
-@var checkbox comment          "Hide Comments" 1
-@var checkbox homepage         "Hide Homepage" 0
+@var checkbox comment          "Hide Comments" 0
+@var checkbox donationShelf    "Hide Donation Shelf" 1
 @var checkbox rightSideVideos  "Hide Right Side Video" 0
-@var checkbox livechat         "Hide live chat" 1
-
 
 ==/UserStyle== */
 @-moz-document domain("youtube.com") {
@@ -65,7 +65,7 @@
 
   /* Hide donation shelf */
   #donation-shelf {
-      display: none;
+      display: none if donationShelf;
   }
 
   /* Hide live chat */
